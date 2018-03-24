@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>KWG Video Player</title>
+        <link rel="stylesheet" href="../kwg-vide-player.min.css" type="text/css" />
+        <script src="../kwg-vide-player.min.js"></script>
+    </head>
+    <body>
+        <video id="video1" width="400" height="225" controls>
+            <source src="../videos/SampleVideo_1280x720_2mb.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <video id="video2" width="400" height="225">
+            <source src="../videos/big_buck_bunny_720p_10mb.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <video id="video3" width="400" height="225">
+            <source src="../videos/big_buck_bunny_720p_10mb.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        
+        
+        <script>
+            var video1 = new kwgVideo('#video1');
+            var video2 = new kwgVideo('#video2');
+            var video3 = new kwgVideo('#video3', {
+//                autoPlay: true,
+//                keyboard: false
+            });
+
+        </script>
+    </body>
+</html>
