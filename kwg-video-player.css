@@ -358,6 +358,9 @@
     height: 100%;
 
 }
+.kwg-video-fullscreen {
+    overflow: hidden;
+}
 
 
 :-webkit-full-screen .kwg-video-player-container {

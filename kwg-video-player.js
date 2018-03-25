@@ -1,5 +1,5 @@
 /*
- * KWG Video Player v1.0.8
+ * KWG Video Player v1.0.9
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
@@ -556,6 +556,7 @@
             if (this.videoElements.wrapperVideo.classList.contains('activated-fullscreen')) {
                 this.videoElements.wrapperVideo.classList.remove('activated-fullscreen');
                 this.videoElements.wrapperVideo.classList.remove('fullscreen');
+                document.body.classList.remove('kwg-video-fullscreen');
                 exitFullscreen();
             } else {
                 launchFullscreen(document.documentElement);
@@ -607,11 +608,12 @@
         var fullScreenEl = document.querySelector('.fullscreen.kwg-video-player-container');
         if (dumpFullscreen() && (!fullScreenEl.classList.contains('activated-fullscreen'))) {
             fullScreenEl.classList.add('activated-fullscreen');
-
+            document.body.classList.add('kwg-video-fullscreen');
         } else {
             if (fullScreenEl !== null) {
                 if (fullScreenEl.classList.contains('activated-fullscreen')) {
                     fullScreenEl.classList.remove('activated-fullscreen');
+                    document.body.classList.remove('kwg-video-fullscreen');
                 }
                 fullScreenEl.classList.remove('fullscreen');
             }
