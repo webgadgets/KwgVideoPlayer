@@ -8,6 +8,13 @@
     font-family: arial;
     font-size: 0;
     background-color: #000;
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
+}
+.kwg-video-player-container video {
+    max-width: 100%;
 }
 .kwg-video-player-container .videoControls {
     font-size: 12px;
