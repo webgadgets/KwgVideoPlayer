@@ -1,12 +1,12 @@
 /*
- * KWG Video Player v1.0.7
+ * KWG Video Player v1.0.8
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
  * Free to use and abuse under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2018-03-24
+ * Date: 2018-03-25
  *
  */
 (function (document, window) {
@@ -86,7 +86,14 @@
             this._registerEvents();
             this.setSpeedLabel();
             if (this.options.autoPlay) {
-                this.videoPlayPause();
+                //this.videoPlayPause();
+                this.el.autoplay = true;
+            }
+            if (this.options.repeat) {
+                this.el.loop = true;
+            }
+            if (this.el.loop) { 
+                this.setRepeatMark();
             }
         },
 
@@ -387,9 +394,9 @@
         endedVideo: function () {
             this.videoElements.btnPlayPause.innerHTML = this.options.playBtnHTML;
             this.videoElements.wrapperVideo.classList.remove('play');
-            if (this.options.repeat) {
+            /*if (this.options.repeat) {
                 this.videoPlayPause();
-            }
+            }*/
         },
         changeCurrentTime: function (event) {
             var pbOffset = this._getOffset(this.videoElements.progressBarContainer);
@@ -534,14 +541,16 @@
             }
         },
         toggleRepeat: function () {
-            if (this.options.repeat) {
-                this.options.repeat = false;
-                this.videoElements.repeatOption.getElementsByClassName('item-content')[0].innerHTML = '';
-            } else {
-                this.options.repeat = true;
-                this.videoElements.repeatOption.getElementsByClassName('item-content')[0].innerHTML = '&checkmark;';
-            }
+            this.el.loop = !this.el.loop;
+            this.setRepeatMark();
             this.closeSettingsMenu();
+        },
+        setRepeatMark: function () {
+            if (this.el.loop) {
+                this.videoElements.repeatOption.getElementsByClassName('item-content')[0].innerHTML = '&checkmark;';
+            } else {
+                this.videoElements.repeatOption.getElementsByClassName('item-content')[0].innerHTML = '';
+            }
         },
         switchFullscreen: function () {
             if (this.videoElements.wrapperVideo.classList.contains('activated-fullscreen')) {
