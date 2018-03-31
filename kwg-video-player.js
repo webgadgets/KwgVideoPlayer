@@ -1,12 +1,12 @@
 /*
- * KWG Video Player v1.0.9
+ * KWG Video Player v1.0.10
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
  * Free to use and abuse under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2018-03-25
+ * Date: 2018-03-31
  *
  */
 (function (document, window) {
@@ -71,28 +71,24 @@
 
         this.videoElements = {};
 
-        // init
-        this.el.controls = false;
-
         this.init();
     }
-    ;
+
 
     kwgVideo.prototype = {
 
         init: function () {
-
+            this.el.controls = false;
             this._createVideoElements();
             this._registerEvents();
             this.setSpeedLabel();
             if (this.options.autoPlay) {
-                //this.videoPlayPause();
                 this.el.autoplay = true;
             }
             if (this.options.repeat) {
                 this.el.loop = true;
             }
-            if (this.el.loop) { 
+            if (this.el.loop) {
                 this.setRepeatMark();
             }
         },
@@ -312,36 +308,48 @@
             this.videoElements.progressBarContainer.addEventListener('click', this.changeCurrentTime.bind(this));
 
             //ProgressHandle
-            this.videoElements.playProgressHandle.addEventListener('mousedown', function () {
-                this.videoElements.playProgressHandle.classList.add('draggingPlayHandle');
-            }.bind(this));
-            this.videoElements.wrapperVideo.addEventListener('mousemove', function (event) {
-                if (this.videoElements.playProgressHandle.classList.contains('draggingPlayHandle')) {
-                    this.changeCurrentTime(event);
-                }
-            }.bind(this));
-            this.videoElements.wrapperVideo.addEventListener('mouseup', function () {
-                if (this.videoElements.playProgressHandle.classList.contains('draggingPlayHandle')) {
-                    this.videoElements.playProgressHandle.classList.remove('draggingPlayHandle');
-                }
-            }.bind(this));
+            ['mousedown', 'touchstart'].map(function(e) {
+                this.videoElements.playProgressHandle.addEventListener(e, function () {
+                    this.videoElements.playProgressHandle.classList.add('draggingPlayHandle');
+                }.bind(this));
+            }, this);
+            ['mousemove', 'touchmove'].map(function(e) {
+                this.videoElements.wrapperVideo.addEventListener(e, function (event) {
+                    if (this.videoElements.playProgressHandle.classList.contains('draggingPlayHandle')) {
+                        this.changeCurrentTime(event);
+                    }
+                }.bind(this));
+            }, this);
+            ['mouseup', 'touchend', 'touchcancel'].map(function(e) {
+                this.videoElements.wrapperVideo.addEventListener(e, function () {
+                    if (this.videoElements.playProgressHandle.classList.contains('draggingPlayHandle')) {
+                        this.videoElements.playProgressHandle.classList.remove('draggingPlayHandle');
+                    }
+                }.bind(this));
+            }, this);
             //ProgressHandle end
 
 
             //soundVolumeHandle
-            this.videoElements.soundVolumeHandle.addEventListener('mousedown', function () {
-                this.videoElements.soundVolumeHandle.classList.add('draggingVolumeHandle');
-            }.bind(this));
-            this.videoElements.wrapperVideo.addEventListener('mousemove', function (event) {
-                if (this.videoElements.soundVolumeHandle.classList.contains('draggingVolumeHandle')) {
-                    this.changeVolume(event);
-                }
-            }.bind(this));
-            this.videoElements.wrapperVideo.addEventListener('mouseup', function () {
-                if (this.videoElements.soundVolumeHandle.classList.contains('draggingVolumeHandle')) {
-                    this.videoElements.soundVolumeHandle.classList.remove('draggingVolumeHandle');
-                }
-            }.bind(this));
+            ['mousedown', 'touchstart'].map(function(e) {
+                this.videoElements.soundVolumeHandle.addEventListener(e, function () {
+                    this.videoElements.soundVolumeHandle.classList.add('draggingVolumeHandle');
+                }.bind(this));
+            }, this);
+            ['mousemove', 'touchmove'].map(function(e) {
+                this.videoElements.wrapperVideo.addEventListener(e, function (event) {
+                    if (this.videoElements.soundVolumeHandle.classList.contains('draggingVolumeHandle')) {
+                        this.changeVolume(event);
+                    }
+                }.bind(this));
+            }, this);
+            ['mouseup', 'touchend', 'touchcancel'].map(function(e) {
+                this.videoElements.wrapperVideo.addEventListener(e, function () {
+                    if (this.videoElements.soundVolumeHandle.classList.contains('draggingVolumeHandle')) {
+                        this.videoElements.soundVolumeHandle.classList.remove('draggingVolumeHandle');
+                    }
+                }.bind(this));
+            }, this);
             //soundVolumeHandle end
 
 
@@ -360,7 +368,7 @@
             document.addEventListener('click', this.closeSettingsMenu.bind(this));
             this.videoElements.speedOption.addEventListener('click', this.openSpeedMenu.bind(this));
             this.videoElements.speedMenu.addEventListener('click', this.changeSpeed.bind(this));
-            this.videoElements.repeatOption.addEventListener('click', this.toggleRepeat.bind(this));            
+            this.videoElements.repeatOption.addEventListener('click', this.toggleRepeat.bind(this));
         },
         toggleMute: function () {
             if (this.el.muted) {
@@ -394,13 +402,12 @@
         endedVideo: function () {
             this.videoElements.btnPlayPause.innerHTML = this.options.playBtnHTML;
             this.videoElements.wrapperVideo.classList.remove('play');
-            /*if (this.options.repeat) {
-                this.videoPlayPause();
-            }*/
         },
         changeCurrentTime: function (event) {
+            var pageX = event.pageX ? event.pageX : event.touches[0].pageX;
+            var pageY = event.pageY ? event.pageY : event.touches[0].pageY;
             var pbOffset = this._getOffset(this.videoElements.progressBarContainer);
-            var mousePos = {'x': (event.pageX - pbOffset.left), 'y': (event.pageY - pbOffset.top)};
+            var mousePos = {'x': (pageX - pbOffset.left), 'y': (pageY - pbOffset.top)};
             var progressBarContainerWidth = parseFloat(window.getComputedStyle(this.videoElements.progressBarContainer, null).getPropertyValue('width'));
             this.el.currentTime = mousePos.x / progressBarContainerWidth * this.el.duration;
             this.showProgress();
@@ -423,8 +430,10 @@
             }
         },
         showHoverProgress: function (event) {
+            var pageX = event.pageX ? event.pageX : event.touches[0].pageX;
+            var pageY = event.pageY ? event.pageY : event.touches[0].pageY;
             var pbOffset = this._getOffset(this.videoElements.progressBarContainer);
-            var mousePos = {'x': (event.pageX - pbOffset.left), 'y': (event.pageY - pbOffset.top)};
+            var mousePos = {'x': (pageX - pbOffset.left), 'y': (pageY - pbOffset.top)};
             var progressBarContainerWidth = parseFloat(window.getComputedStyle(this.videoElements.progressBarContainer, null).getPropertyValue('width'));
             this.videoElements.hoverProgress.style.width = (mousePos.x / progressBarContainerWidth * 100 + '%');
         },
@@ -439,7 +448,7 @@
             this.showProgress();
             this.hoverInterval = setTimeout(function () {
                 this.videoElements.wrapperVideo.classList.remove('hover');
-            }.bind(this), 2000);
+            }.bind(this), 600);
         },
         setActiveVideo: function (event) {
             this.videoElements.wrapperVideo.classList.add('active-p');
@@ -469,8 +478,10 @@
             this.videoElements.volumePanel.children[0].classList.add(classVolumeLevel);
         },
         changeVolume: function (event) {
+            var pageX = event.pageX ? event.pageX : event.touches[0].pageX;
+            var pageY = event.pageY ? event.pageY : event.touches[0].pageY;
             var vsOffset = this._getOffset(this.videoElements.volumeSlider);
-            var mousePos = {'x': (event.pageX - vsOffset.left), 'y': (event.pageY - vsOffset.top)};
+            var mousePos = {'x': (pageX - vsOffset.left), 'y': (pageY - vsOffset.top)};
             var volumeSliderWidth = parseFloat(window.getComputedStyle(this.videoElements.volumeSlider, null).getPropertyValue('width'));
             this.el.volume = mousePos.x / volumeSliderWidth;
             this.showVolume();
@@ -480,8 +491,10 @@
             }
         },
         showHoverVolume: function (event) {
+            var pageX = event.pageX ? event.pageX : event.touches[0].pageX;
+            var pageY = event.pageY ? event.pageY : event.touches[0].pageY;
             var vsOffset = this._getOffset(this.videoElements.volumeSlider);
-            var mousePos = {'x': (event.pageX - vsOffset.left), 'y': (event.pageY - vsOffset.top)};
+            var mousePos = {'x': (pageX - vsOffset.left), 'y': (pageY - vsOffset.top)};
             var volumeSliderWidth = parseFloat(window.getComputedStyle(this.videoElements.volumeSlider, null).getPropertyValue('width'));
             this.videoElements.soundHover.style.width = (mousePos.x / volumeSliderWidth * 100 + '%');
         },
@@ -503,7 +516,6 @@
         },
         openSpeedMenu: function () {
             this.videoElements.speedMenu.classList.add('open');
-//                        this.closeSettingsMenu();
         },
         closeSpeedMenu: function () {
             if (this.videoElements.speedMenu.classList.contains('open')) {
@@ -621,9 +633,6 @@
         }
     }
     function launchFullscreen(element) {
-        /*if (element === undefined) {
-         element = document.documentElement;
-         }*/
         element = element || document.documentElement;
         if (element.requestFullscreen) {
             element.requestFullscreen();
@@ -650,9 +659,7 @@
 
 
 
-    /**
-     *
-     */
+
     window.kwgVideo = kwgVideo;
 
 })(document, window);

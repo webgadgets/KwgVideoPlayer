@@ -8,9 +8,9 @@
     font-family: arial;
     font-size: 0;
     background-color: #000;
-    -webkit-user-select: none;  
-    -moz-user-select: none;    
-    -ms-user-select: none;      
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
     user-select: none;
 }
 .kwg-video-player-container video {
@@ -79,10 +79,10 @@
     background-color: rgba(255,255,255,0.25);
     cursor: pointer;
 }
-.kwg-video-player-container .progressWrapBarContainer:hover .progressBarContainer {
+/*.kwg-video-player-container .progressWrapBarContainer:hover .progressBarContainer {
     transform: scaleY(1.2);
     top: -0.5px;
-}
+}*/
 
 .kwg-video-player-container .controls {
     /*margin: 20px 0 0;*/
@@ -107,15 +107,16 @@
 .kwg-video-player-container .progressBarContainer .playProgress .playProgressHandle,
 .kwg-video-player-container .volumeSlider .soundVolume .soundVolumeHandle {
     position: absolute;
-    width: 10px;
-    height: 8px;
+    width: 11px;
+    height: 11px;
     border-radius: 50%;
     background-color: #fff;
-    right: -2px;
-    top: -1px;
+    right: -3px;
+    top: -3px;
     z-index: 1;
-    opacity: 0;
+    /*opacity: 0;*/
     transition: all 0.2s;
+    /*transform: scale(1.3);*/
 }
 .kwg-video-player-container .progressWrapBarContainer:hover .playProgress .playProgressHandle,
 .kwg-video-player-container .volumePanel:hover .volumeSlider .soundVolume .soundVolumeHandle,
@@ -123,11 +124,11 @@
 .kwg-video-player-container .volumePanel .volumeSlider .soundVolume .soundVolumeHandle.draggingVolumeHandle {
     opacity: 1;
 }
-.kwg-video-player-container .progressWrapBarContainer:not(:hover) .playProgress .playProgressHandle.draggingPlayHandle,
+/*.kwg-video-player-container .progressWrapBarContainer:not(:hover) .playProgress .playProgressHandle.draggingPlayHandle,
 .kwg-video-player-container .volumePanel:not(:hover) .volumeSlider .soundVolume .soundVolumeHandle.draggingVolumeHandle {
     height: 10px;
     top: -2px;
-}
+}*/
 .kwg-video-player-container .progressBarContainer .playProgress {
     position: absolute;
     left: 0;
@@ -206,10 +207,10 @@
     position: relative;
     vertical-align: middle;
 }
-.kwg-video-player-container .volumePanel:hover .volumeSlider {
+/*.kwg-video-player-container .volumePanel:hover .volumeSlider {
     transform: scaleY(1.2);
     top: -0.5px;
-}
+}*/
 .kwg-video-player-container .volumeSlider .soundVolume {
     position: absolute;
     left: 0;
@@ -398,4 +399,4 @@ video::-webkit-media-controls {
 }
 video::-webkit-media-controls-enclosure {
     display:none !important;
-} 
+}
