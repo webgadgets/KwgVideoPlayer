@@ -1,5 +1,5 @@
 /*
- * KWG Video Player v1.0.10
+ * KWG Video Player v1.1.0
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
@@ -78,6 +78,7 @@
     kwgVideo.prototype = {
 
         init: function () {
+            this.stateControls = this.el.controls;
             this.el.controls = false;
             this._createVideoElements();
             this._registerEvents();
@@ -91,6 +92,13 @@
             if (this.el.loop) {
                 this.setRepeatMark();
             }
+        },
+        destroy: function () {
+            var videoEl = this.el.cloneNode(true);
+            videoEl.controls = this.stateControls;
+            var parentVideo = this.videoElements.wrapperVideo.parentNode;
+            parentVideo.insertBefore(videoEl, this.videoElements.wrapperVideo);
+            parentVideo.removeChild(this.videoElements.wrapperVideo);
         },
 
         _createVideoElements: function () {
@@ -448,7 +456,7 @@
             this.showProgress();
             this.hoverInterval = setTimeout(function () {
                 this.videoElements.wrapperVideo.classList.remove('hover');
-            }.bind(this), 600);
+            }.bind(this), 900);
         },
         setActiveVideo: function (event) {
             this.videoElements.wrapperVideo.classList.add('active-p');
@@ -483,7 +491,13 @@
             var vsOffset = this._getOffset(this.videoElements.volumeSlider);
             var mousePos = {'x': (pageX - vsOffset.left), 'y': (pageY - vsOffset.top)};
             var volumeSliderWidth = parseFloat(window.getComputedStyle(this.videoElements.volumeSlider, null).getPropertyValue('width'));
-            this.el.volume = mousePos.x / volumeSliderWidth;
+            var volume = mousePos.x / volumeSliderWidth;
+            if (volume < 0) {
+                volume = 0;
+            } else if (volume > 1) {
+                volume = 1;
+            }
+            this.el.volume = volume;
             this.showVolume();
             if (this.el.muted) {
                 this.el.muted = false;
