@@ -1,12 +1,12 @@
 /*
- * KWG Video Player v1.1.0
+ * KWG Video Player v1.1.1
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
  * Free to use and abuse under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2018-03-31
+ * Date: 2018-04-01
  *
  */
 (function (document, window) {
@@ -67,7 +67,8 @@
         var elVideo = document.querySelector(selector);
 
         this.el = elVideo;
-        this.options = Object.assign(defaults, options);
+        //this.options = Object.assign(defaults, options);
+        this.options = extendDefaults(defaults, options)
 
         this.videoElements = {};
 
@@ -669,6 +670,15 @@
     }
     function dumpFullscreen() {
         return document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+    }
+    function extendDefaults(source, properties) {
+        var property;
+        for (property in properties) {
+            if (properties.hasOwnProperty(property)) {
+                source[property] = properties[property];
+            }
+        }
+        return source;
     }
 
 
