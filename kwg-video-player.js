@@ -1,5 +1,5 @@
 /*
- * KWG Video Player v1.1.1
+ * KWG Video Player v1.1.2
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets

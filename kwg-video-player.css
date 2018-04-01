@@ -70,13 +70,22 @@
 }
 
 .kwg-video-player-container .progressWrapBarContainer {
-    padding: 8px 5px 6px;
+    padding: 4px 5px 1px;
     margin: 0 -3px;
+}
+.kwg-video-player-container .progressBarContainer:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    background-color: rgba(255,255,255,0.25);
 }
 .kwg-video-player-container .progressBarContainer {
     position: relative;
-    height: 5px;
-    background-color: rgba(255,255,255,0.25);
+    height: 15px;
     cursor: pointer;
 }
 /*.kwg-video-player-container .progressWrapBarContainer:hover .progressBarContainer {
@@ -104,18 +113,32 @@
     margin-left: 10px;
 }
 
+.kwg-video-player-container .progressBarContainer .playProgress .playProgressHandle:before,
+.kwg-video-player-container .volumeSlider .soundVolume .soundVolumeHandle:before {
+    content: '';
+    display: block;
+    width: 11px;
+    height: 11px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 50%;
+}
 .kwg-video-player-container .progressBarContainer .playProgress .playProgressHandle,
 .kwg-video-player-container .volumeSlider .soundVolume .soundVolumeHandle {
     position: absolute;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background-color: #fff;
-    right: -3px;
+    width: 21px;
+    height: 21px;
+    right: -10.5px;
     top: -3px;
     z-index: 1;
     /*opacity: 0;*/
     transition: all 0.2s;
+    /*border: 1px solid #000;*/
     /*transform: scale(1.3);*/
 }
 .kwg-video-player-container .progressWrapBarContainer:hover .playProgress .playProgressHandle,
@@ -129,27 +152,53 @@
     height: 10px;
     top: -2px;
 }*/
+.kwg-video-player-container .progressBarContainer .playProgress:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    background-color: rgba(255,255,255,1);
+}
 .kwg-video-player-container .progressBarContainer .playProgress {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(255,255,255,0.5);
-    background-color: rgba(255,255,255,1);
+}
+.kwg-video-player-container .progressBarContainer .hoverProgress:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    background-color: rgba(255,255,255,0.3);
 }
 .kwg-video-player-container .progressBarContainer .hoverProgress {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(255,255,255,0.3);
+}
+.kwg-video-player-container .progressBarContainer .bufferedProgress:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    background-color: rgba(255,255,255,0.2);
 }
 .kwg-video-player-container .progressBarContainer .bufferedProgress {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(255,255,255,0.2);
 }
 .kwg-video-player-container .timeDisplay {
     display: inline-block;
@@ -198,33 +247,63 @@
 .kwg-video-player-container .volumePanel svg.level4 path + path + path  {
     opacity: 1;
 }
+.kwg-video-player-container .volumeSlider:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    background-color: rgba(255,255,255,0.3);
+}
 .kwg-video-player-container .volumeSlider {
     display: inline-block;
-    width: 60px;
-    height: 5px;
-    background-color: rgba(255,255,255,0.3);
+    width: 70px;
+    height: 15px;
+
     cursor: pointer;
     position: relative;
     vertical-align: middle;
+    /*border: 1px solid #000;*/
+    /*background-color: #000;*/
 }
 /*.kwg-video-player-container .volumePanel:hover .volumeSlider {
     transform: scaleY(1.2);
     top: -0.5px;
 }*/
+.kwg-video-player-container .volumeSlider .soundVolume:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    background-color: rgba(255,255,255,1);
+}
 .kwg-video-player-container .volumeSlider .soundVolume {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(255,255,255,0.5);
-    background-color: rgba(255,255,255,1);
+
+}
+.kwg-video-player-container .volumeSlider .soundHover:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    left: 0;
+    right: 0;
+    background-color: rgba(255,255,255,0.4);
 }
 .kwg-video-player-container .volumeSlider .soundHover {
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: rgba(255,255,255,0.4);
 }
 .kwg-video-player-container .btnPlayPause svg {
     vertical-align: middle;
