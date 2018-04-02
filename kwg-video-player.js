@@ -1,5 +1,5 @@
 /*
- * KWG Video Player v1.1.2
+ * KWG Video Player v1.1.3
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
@@ -276,7 +276,6 @@
                 if (this.options.keyboard && this.videoElements.wrapperVideo.classList.contains('active-p')) {
                     if (event.keyCode == 32 || event.which == 32) {
                         this.videoPlayPause();
-                        event.preventDefault();
                     } else if (event.keyCode == 39 || event.which == 39) { // right    //current time next
                         var newTime = this.el.currentTime + 15;
                         this.el.currentTime = (newTime > this.el.duration) ? this.el.duration : newTime;
@@ -302,6 +301,7 @@
                     } else if (event.keyCode == 77 || event.which == 77) { // m //mute
                         this.toggleMute.call(this);
                     }
+                    event.preventDefault();
                 }
             }.bind(this));
             document.addEventListener('click', this.unsetActiveVideo.bind(this));
