@@ -1,12 +1,12 @@
 /*
- * KWG Video Player v1.1.3
+ * KWG Video Player v1.1.4
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
  * Free to use and abuse under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2018-04-01
+ * Date: 2018-04-02
  *
  */
 (function (document, window) {
@@ -371,7 +371,7 @@
             this.el.addEventListener('play', this._playVideo.bind(this));
             this.el.addEventListener('ended', this.endedVideo.bind(this));
             this.el.addEventListener('waiting', this.showLoader.bind(this));
-            this.el.addEventListener('canplay', this.hideLoader.bind(this));
+            this.el.addEventListener('playing', this.hideLoader.bind(this));
             this.el.addEventListener('timeupdate', this.showProgress.bind(this));
             this.videoElements.settingsButton.addEventListener('click', this.toggleSettingsMenu.bind(this));
             document.addEventListener('click', this.closeSettingsMenu.bind(this));
@@ -483,8 +483,18 @@
                 classVolumeLevel = 'level4';
             }
 
-            this.videoElements.volumePanel.children[0].classList.remove('level0', 'level1', 'level2', 'level3', 'level4');
-            this.videoElements.volumePanel.children[0].classList.add(classVolumeLevel);
+            if (this.videoElements.volumePanel.classList.contains('level0')) {
+                this.videoElements.volumePanel.classList.remove('level0');
+            } else if (this.videoElements.volumePanel.classList.contains('level1')) {
+                this.videoElements.volumePanel.classList.remove('level1');
+            } else if (this.videoElements.volumePanel.classList.contains('level2')) {
+                this.videoElements.volumePanel.classList.remove('level2');
+            } else if (this.videoElements.volumePanel.classList.contains('level3')) {
+                this.videoElements.volumePanel.classList.remove('level3');
+            } else if (this.videoElements.volumePanel.classList.contains('level4')) {
+                this.videoElements.volumePanel.classList.remove('level4');
+            }
+            this.videoElements.volumePanel.classList.add(classVolumeLevel);
         },
         changeVolume: function (event) {
             var pageX = event.pageX ? event.pageX : event.touches[0].pageX;

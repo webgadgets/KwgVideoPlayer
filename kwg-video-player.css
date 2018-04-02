@@ -220,31 +220,31 @@
 .kwg-video-player-container .volumePanel.mute svg path + path, .kwg-video-player-container .volumePanel.mute svg path + path +path {
     opacity: 0!important;
 }
-.kwg-video-player-container .volumePanel svg.level0 path + path , .kwg-video-player-container .volumePanel svg.level0 path + path + path  {
+.kwg-video-player-container .volumePanel.level0 path + path , .kwg-video-player-container .volumePanel.level0 path + path + path  {
     opacity: 0;
 }
-.kwg-video-player-container .volumePanel svg.level1 path + path  {
+.kwg-video-player-container .volumePanel.level1 path + path  {
     opacity: 0.5;
 }
-.kwg-video-player-container .volumePanel svg.level1 path + path + path  {
+.kwg-video-player-container .volumePanel.level1 path + path + path  {
     opacity: 0;
 }
-.kwg-video-player-container .volumePanel svg.level2 path + path  {
+.kwg-video-player-container .volumePanel.level2 path + path  {
     opacity: 1;
 }
-.kwg-video-player-container .volumePanel svg.level2 path + path + path  {
+.kwg-video-player-container .volumePanel.level2 path + path + path  {
     opacity: 0;
 }
-.kwg-video-player-container .volumePanel svg.level3 path + path  {
+.kwg-video-player-container .volumePanel.level3 path + path  {
     opacity: 1;
 }
-.kwg-video-player-container .volumePanel svg.level3 path + path + path  {
+.kwg-video-player-container .volumePanel.level3 path + path + path  {
     opacity: 0.5;
 }
-.kwg-video-player-container .volumePanel svg.level4 path + path  {
+.kwg-video-player-container .volumePanel.level4 path + path  {
     opacity: 1;
 }
-.kwg-video-player-container .volumePanel svg.level4 path + path + path  {
+.kwg-video-player-container .volumePanel.level4 path + path + path  {
     opacity: 1;
 }
 .kwg-video-player-container .volumeSlider:before {
