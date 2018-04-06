@@ -1,5 +1,5 @@
 /*
- * KWG Video Player v1.1.6
+ * KWG Video Player v1.1.7
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
@@ -314,7 +314,7 @@
             document.addEventListener('click', this.unsetActiveVideo.bind(this));
             this.videoElements.wrapperVideo.addEventListener('click', this.setActiveVideo.bind(this));
             this.el.addEventListener('click', function (e) {
-                e.preventDefault();
+                //e.preventDefault();
             });
 
             this.videoElements.wrapperVideo.addEventListener('mousemove', this.toggleHoverVideo.bind(this));
@@ -379,9 +379,17 @@
             this.el.addEventListener('ended', this.endedVideo.bind(this));
             this.el.addEventListener('waiting', this.showLoader.bind(this));
             this.el.addEventListener('playing', this.hideLoader.bind(this));
+            this.el.addEventListener('timeupdate', this.hideLoader.bind(this));
             this.el.addEventListener('timeupdate', this.showProgress.bind(this));
             this.videoElements.settingsButton.addEventListener('click', this.toggleSettingsMenu.bind(this));
             document.addEventListener('click', this.closeSettingsMenu.bind(this));
+            this.videoElements.videoControls.addEventListener('click', this.closeSettingsMenu.bind(this));
+//            this.videoElements.videoControls.addEventListener('click', function (){
+//                alert();
+//            });
+            this.videoElements.settingsWrap.addEventListener('click', function (event){
+                event.stopPropagation();
+            });
             this.videoElements.speedOption.addEventListener('click', this.openSpeedMenu.bind(this));
             this.videoElements.speedMenu.addEventListener('click', this.changeSpeed.bind(this));
             this.videoElements.repeatOption.addEventListener('click', this.toggleRepeat.bind(this));
@@ -468,7 +476,7 @@
         },
         setActiveVideo: function (event) {
             this.videoElements.wrapperVideo.classList.add('active-p');
-            event.stopPropagation();
+            //event.stopPropagation(); // ?
         },
         unsetActiveVideo: function () {
             this.videoElements.wrapperVideo.classList.remove('active-p');
@@ -587,7 +595,10 @@
         toggleRepeat: function () {
             this.el.loop = !this.el.loop;
             this.setRepeatMark();
-            this.closeSettingsMenu();
+            setTimeout(function (){
+                this.closeSettingsMenu();
+            }.bind(this), 250);
+
         },
         setRepeatMark: function () {
             if (this.el.loop) {
