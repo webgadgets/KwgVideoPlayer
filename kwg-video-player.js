@@ -1,12 +1,12 @@
 /*
- * KWG Video Player v1.1.7
+ * KWG Video Player v1.1.8
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
  * Free to use and abuse under the MIT license.
  * http://www.opensource.org/licenses/mit-license.php
  *
- * Date: 2018-04-06
+ * Date: 2018-04-07
  *
  */
 (function (document, window) {
@@ -267,55 +267,18 @@
 
         },
         _registerEvents: function () {
-            this.videoElements.fullscreenButton.addEventListener('click', function() {
-                this.switchFullscreen()
-                handleFullscreen();
-            }.bind(this));
-            this.el.addEventListener('dblclick', function() {
-                this.switchFullscreen()
-                handleFullscreen();
-            }.bind(this));
+            this.videoElements.fullscreenButton.addEventListener('click', this.switchFullscreen.bind(this));
+            this.el.addEventListener('dblclick', this.switchFullscreen.bind(this));
 
             this.el.addEventListener('click', this.videoPlayPause.bind(this));
             this.videoElements.btnPlayPause.addEventListener('click', this.videoPlayPause.bind(this));
 
-            document.addEventListener('keydown', function (event) {
-                if (this.options.keyboard && this.videoElements.wrapperVideo.classList.contains('active-p')) {
-                    if (event.keyCode == 32 || event.which == 32) {
-                        this.videoPlayPause();
-                    } else if (event.keyCode == 39 || event.which == 39) { // right    //current time next
-                        var newTime = this.el.currentTime + 15;
-                        this.el.currentTime = (newTime > this.el.duration) ? this.el.duration : newTime;
-                    } else if (event.keyCode == 37 || event.which == 37) { // left    //current time prev
-                        var newTime = this.el.currentTime - 15;
-                        this.el.currentTime = (newTime < 0) ? 0 : newTime;
-                    } else if (event.keyCode == 38 || event.which == 38) { // up       //volume up
-                        var newVolume = this.el.volume + 0.10;
-                        this.el.volume = (newVolume > 1) ? 1 : newVolume;
-                        this.showVolume();
-                        if (this.el.muted) {
-                            this.el.muted = false;
-                            this.videoElements.soundVolume.style.opacity = 1;
-                        }
-                    } else if (event.keyCode == 40 || event.which == 40) { // down     //volume down
-                        var newVolume = this.el.volume - 0.10;
-                        this.el.volume = (newVolume < 0) ? 0 : newVolume;
-                        this.showVolume();
-                        if (this.el.muted) {
-                            this.el.muted = false;
-                            this.videoElements.volumePanel.classList.remove('mute');
-                        }
-                    } else if (event.keyCode == 77 || event.which == 77) { // m //mute
-                        this.toggleMute.call(this);
-                    }
-                    event.preventDefault();
-                }
-            }.bind(this));
+            document.addEventListener('keydown', this.setKeyboardEvents.bind(this));
             document.addEventListener('click', this.unsetActiveVideo.bind(this));
             this.videoElements.wrapperVideo.addEventListener('click', this.setActiveVideo.bind(this));
-            this.el.addEventListener('click', function (e) {
+            /*this.el.addEventListener('click', function (e) {
                 //e.preventDefault();
-            });
+            });*/
 
             this.videoElements.wrapperVideo.addEventListener('mousemove', this.toggleHoverVideo.bind(this));
 
@@ -325,46 +288,26 @@
 
             //ProgressHandle
             ['mousedown', 'touchstart'].map(function(e) {
-                this.videoElements.playProgressHandle.addEventListener(e, function () {
-                    this.videoElements.playProgressHandle.classList.add('draggingPlayHandle');
-                }.bind(this));
+                this.videoElements.playProgressHandle.addEventListener(e, this.startDraggingPlayHandle.bind(this));
             }, this);
             ['mousemove', 'touchmove'].map(function(e) {
-                this.videoElements.wrapperVideo.addEventListener(e, function (event) {
-                    if (this.videoElements.playProgressHandle.classList.contains('draggingPlayHandle')) {
-                        this.changeCurrentTime(event);
-                    }
-                }.bind(this));
+                this.videoElements.wrapperVideo.addEventListener(e, this.draggingPlayHandle.bind(this));
             }, this);
             ['mouseup', 'touchend', 'touchcancel'].map(function(e) {
-                this.videoElements.wrapperVideo.addEventListener(e, function () {
-                    if (this.videoElements.playProgressHandle.classList.contains('draggingPlayHandle')) {
-                        this.videoElements.playProgressHandle.classList.remove('draggingPlayHandle');
-                    }
-                }.bind(this));
+                this.videoElements.wrapperVideo.addEventListener(e, this.endDraggingPlayHandle.bind(this));
             }, this);
             //ProgressHandle end
 
 
             //soundVolumeHandle
             ['mousedown', 'touchstart'].map(function(e) {
-                this.videoElements.soundVolumeHandle.addEventListener(e, function () {
-                    this.videoElements.soundVolumeHandle.classList.add('draggingVolumeHandle');
-                }.bind(this));
+                this.videoElements.soundVolumeHandle.addEventListener(e, this.startDraggingVolumeHandle.bind(this));
             }, this);
             ['mousemove', 'touchmove'].map(function(e) {
-                this.videoElements.wrapperVideo.addEventListener(e, function (event) {
-                    if (this.videoElements.soundVolumeHandle.classList.contains('draggingVolumeHandle')) {
-                        this.changeVolume(event);
-                    }
-                }.bind(this));
+                this.videoElements.wrapperVideo.addEventListener(e, this.draggingVolumeHandle.bind(this));
             }, this);
             ['mouseup', 'touchend', 'touchcancel'].map(function(e) {
-                this.videoElements.wrapperVideo.addEventListener(e, function () {
-                    if (this.videoElements.soundVolumeHandle.classList.contains('draggingVolumeHandle')) {
-                        this.videoElements.soundVolumeHandle.classList.remove('draggingVolumeHandle');
-                    }
-                }.bind(this));
+                this.videoElements.wrapperVideo.addEventListener(e, this.endDraggingVolumeHandle.bind(this));
             }, this);
             //soundVolumeHandle end
 
@@ -384,15 +327,79 @@
             this.videoElements.settingsButton.addEventListener('click', this.toggleSettingsMenu.bind(this));
             document.addEventListener('click', this.closeSettingsMenu.bind(this));
             this.videoElements.videoControls.addEventListener('click', this.closeSettingsMenu.bind(this));
-//            this.videoElements.videoControls.addEventListener('click', function (){
-//                alert();
-//            });
+
             this.videoElements.settingsWrap.addEventListener('click', function (event){
                 event.stopPropagation();
             });
             this.videoElements.speedOption.addEventListener('click', this.openSpeedMenu.bind(this));
             this.videoElements.speedMenu.addEventListener('click', this.changeSpeed.bind(this));
             this.videoElements.repeatOption.addEventListener('click', this.toggleRepeat.bind(this));
+        },
+        startDraggingVolumeHandle: function () {
+            this.videoElements.soundVolumeHandle.classList.add('draggingVolumeHandle');
+        },
+        draggingVolumeHandle: function (event) {
+            if (this.videoElements.soundVolumeHandle.classList.contains('draggingVolumeHandle')) {
+                this.changeVolume(event);
+            }
+        },
+        endDraggingVolumeHandle: function () {
+            if (this.videoElements.soundVolumeHandle.classList.contains('draggingVolumeHandle')) {
+                this.videoElements.soundVolumeHandle.classList.remove('draggingVolumeHandle');
+            }
+        },
+        startDraggingPlayHandle: function () {
+            this.videoElements.playProgressHandle.classList.add('draggingPlayHandle');
+        },
+        draggingPlayHandle: function (event) {
+            if (this.videoElements.playProgressHandle.classList.contains('draggingPlayHandle')) {
+                this.changeCurrentTime(event);
+            }
+        },
+        endDraggingPlayHandle: function () {
+            if (this.videoElements.playProgressHandle.classList.contains('draggingPlayHandle')) {
+                this.videoElements.playProgressHandle.classList.remove('draggingPlayHandle');
+            }
+        },
+        setKeyboardEvents: function (event) {
+            if (this.options.keyboard && this.videoElements.wrapperVideo.classList.contains('active-p')) {
+                if (event.keyCode == 32 || event.which == 32) {
+                    this.videoPlayPause();
+                    event.preventDefault();
+                } else if (event.keyCode == 39 || event.which == 39) { // right    //current time next
+                    var newTime = this.el.currentTime + 15;
+                    this.el.currentTime = (newTime > this.el.duration) ? this.el.duration : newTime;
+                    event.preventDefault();
+                } else if (event.keyCode == 37 || event.which == 37) { // left    //current time prev
+                    var newTime = this.el.currentTime - 15;
+                    this.el.currentTime = (newTime < 0) ? 0 : newTime;
+                    event.preventDefault();
+                } else if (event.keyCode == 38 || event.which == 38) { // up       //volume up
+                    var newVolume = this.el.volume + 0.10;
+                    this.el.volume = (newVolume > 1) ? 1 : newVolume;
+                    this.showVolume();
+                    if (this.el.muted) {
+                        this.el.muted = false;
+                        this.videoElements.soundVolume.style.opacity = 1;
+                    }
+                    event.preventDefault();
+                } else if (event.keyCode == 40 || event.which == 40) { // down     //volume down
+                    var newVolume = this.el.volume - 0.10;
+                    this.el.volume = (newVolume < 0) ? 0 : newVolume;
+                    this.showVolume();
+                    if (this.el.muted) {
+                        this.el.muted = false;
+                        this.videoElements.volumePanel.classList.remove('mute');
+                    }
+                    event.preventDefault();
+                } else if (event.keyCode == 77 || event.which == 77) { // m //mute
+                    this.toggleMute.call(this);
+                    event.preventDefault();
+                } else if (event.keyCode == 70 || event.which == 70) { // m //fullscreen
+                    this.switchFullscreen();
+                    event.preventDefault();
+                }
+            }
         },
         toggleMute: function () {
             if (this.el.muted) {
@@ -430,7 +437,7 @@
         changeCurrentTime: function (event) {
             var pageX = event.pageX ? event.pageX : event.touches[0].pageX;
             var pageY = event.pageY ? event.pageY : event.touches[0].pageY;
-            var pbOffset = this._getOffset(this.videoElements.progressBarContainer);
+            var pbOffset = getOffset(this.videoElements.progressBarContainer);
             var mousePos = {'x': (pageX - pbOffset.left), 'y': (pageY - pbOffset.top)};
             var progressBarContainerWidth = parseFloat(window.getComputedStyle(this.videoElements.progressBarContainer, null).getPropertyValue('width'));
             this.el.currentTime = mousePos.x / progressBarContainerWidth * this.el.duration;
@@ -439,7 +446,7 @@
         showProgress: function () {
             var playProgressWidth = (this.el.currentTime / this.el.duration) * 100 + '%';
             this.videoElements.playProgress.style.width = playProgressWidth;
-            this.videoElements.timeDisplay.innerHTML = this._seconds_2_hms(this.el.currentTime) + " / " + this._seconds_2_hms(this.el.duration);
+            this.videoElements.timeDisplay.innerHTML = seconds_2_hms(this.el.currentTime) + " / " + seconds_2_hms(this.el.duration);
 
             this.showBufferedProgress();
         },
@@ -456,7 +463,7 @@
         showHoverProgress: function (event) {
             var pageX = event.pageX ? event.pageX : event.touches[0].pageX;
             var pageY = event.pageY ? event.pageY : event.touches[0].pageY;
-            var pbOffset = this._getOffset(this.videoElements.progressBarContainer);
+            var pbOffset = getOffset(this.videoElements.progressBarContainer);
             var mousePos = {'x': (pageX - pbOffset.left), 'y': (pageY - pbOffset.top)};
             var progressBarContainerWidth = parseFloat(window.getComputedStyle(this.videoElements.progressBarContainer, null).getPropertyValue('width'));
             this.videoElements.hoverProgress.style.width = (mousePos.x / progressBarContainerWidth * 100 + '%');
@@ -475,8 +482,13 @@
             }.bind(this), 900);
         },
         setActiveVideo: function (event) {
+            var activeVideos = document.querySelector('.kwg-video-player-container.active-p');
+            if (activeVideos) {
+                activeVideos.classList.remove('active-p');
+            }
+
             this.videoElements.wrapperVideo.classList.add('active-p');
-            //event.stopPropagation(); // ?
+            event.stopPropagation();
         },
         unsetActiveVideo: function () {
             this.videoElements.wrapperVideo.classList.remove('active-p');
@@ -514,7 +526,7 @@
         changeVolume: function (event) {
             var pageX = event.pageX ? event.pageX : event.touches[0].pageX;
             var pageY = event.pageY ? event.pageY : event.touches[0].pageY;
-            var vsOffset = this._getOffset(this.videoElements.volumeSlider);
+            var vsOffset = getOffset(this.videoElements.volumeSlider);
             var mousePos = {'x': (pageX - vsOffset.left), 'y': (pageY - vsOffset.top)};
             var volumeSliderWidth = parseFloat(window.getComputedStyle(this.videoElements.volumeSlider, null).getPropertyValue('width'));
             var volume = mousePos.x / volumeSliderWidth;
@@ -533,7 +545,7 @@
         showHoverVolume: function (event) {
             var pageX = event.pageX ? event.pageX : event.touches[0].pageX;
             var pageY = event.pageY ? event.pageY : event.touches[0].pageY;
-            var vsOffset = this._getOffset(this.videoElements.volumeSlider);
+            var vsOffset = getOffset(this.videoElements.volumeSlider);
             var mousePos = {'x': (pageX - vsOffset.left), 'y': (pageY - vsOffset.top)};
             var volumeSliderWidth = parseFloat(window.getComputedStyle(this.videoElements.volumeSlider, null).getPropertyValue('width'));
             this.videoElements.soundHover.style.width = (mousePos.x / volumeSliderWidth * 100 + '%');
@@ -613,43 +625,15 @@
                 this.videoElements.wrapperVideo.classList.add('activated-fullscreen');
                 this.videoElements.wrapperVideo.classList.add('fullscreen');
             }
+            handleFullscreen();
         },
         showLoader: function () {
             this.videoElements.loader.style.display = 'block';
         },
         hideLoader: function () {
             this.videoElements.loader.style.display = 'none';
-        },
-        _seconds_2_hms: function (totalSeconds) {
-            var hours, minutes, seconds, time;
-
-            hours = Math.floor(totalSeconds / 3600);
-            totalSeconds %= 3600;
-            minutes = Math.floor(totalSeconds / 60);
-            seconds = Math.floor(totalSeconds % 60);
-            if (seconds.toString().length == 1) {
-                seconds = "0" + seconds + '';
-            }
-            if (isNaN(minutes)) {
-                minutes = '';
-            }
-            if (isNaN(seconds)) {
-                seconds = '';
-            }
-            time = ((hours > 0) ? hours + ':' : '') + minutes + ':' + seconds;
-
-            return time;
-        },
-        _getOffset: function (el) {
-            var _x = 0;
-            var _y = 0;
-            while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
-                _x += el.offsetLeft - el.scrollLeft;
-                _y += el.offsetTop - el.scrollTop;
-                el = el.offsetParent;
-            }
-            return {top: _y, left: _x};
         }
+
     };
 
     function extendDefaults(source, properties) {
@@ -662,6 +646,36 @@
         return source;
     }
 
+    function seconds_2_hms(totalSeconds) {
+        var hours, minutes, seconds, time;
+
+        hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        minutes = Math.floor(totalSeconds / 60);
+        seconds = Math.floor(totalSeconds % 60);
+        if (seconds.toString().length == 1) {
+            seconds = "0" + seconds + '';
+        }
+        if (isNaN(minutes)) {
+            minutes = '';
+        }
+        if (isNaN(seconds)) {
+            seconds = '';
+        }
+        time = ((hours > 0) ? hours + ':' : '') + minutes + ':' + seconds;
+
+        return time;
+    }
+    function getOffset(el) {
+        var _x = 0;
+        var _y = 0;
+        while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+            _x += el.offsetLeft - el.scrollLeft;
+            _y += el.offsetTop - el.scrollTop;
+            el = el.offsetParent;
+        }
+        return {top: _y, left: _x};
+    }
 
     function isFullScreen() {
         return !!(document.fullScreen || document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement || document.fullscreenElement);
