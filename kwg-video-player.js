@@ -1,5 +1,5 @@
 /*
- * KWG Video Player v1.1.9
+ * KWG Video Player v1.1.10
  * https://webgadgets.net/plugins/custom-html5-video-player
  *
  * Copyright 2018, WebGadgets
@@ -62,6 +62,7 @@
                     speedLabel: '2'
                 }
             ],
+            containerClass: '',
             onInit: function () {},
             beforeDestroy: function () {},
         };
@@ -119,6 +120,9 @@
             this.videoElements.wrapperVideo = document.createElement('div');
             parent.replaceChild(this.videoElements.wrapperVideo, this.el);
             this.videoElements.wrapperVideo.className = 'kwg-video-player-container';
+            if (this.options.containerClass != '') {
+                this.videoElements.wrapperVideo.classList.add(this.options.containerClass);
+            }
             this.videoElements.wrapperVideo.appendChild(this.el);
 
 
