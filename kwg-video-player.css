@@ -15,6 +15,7 @@
 }
 .kwg-video-player-container video {
     max-width: 100%;
+    height: auto;
 }
 .kwg-video-player-container .videoControls {
     font-size: 12px;
